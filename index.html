@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Plan Live</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 920px;
+            margin: 5px auto;
+            padding: 5px;
+            font-size: 12px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin: 3px 0 5px 0;
+            font-size: 18px;
+            text-align: center;
+        }
+        .header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3px;
+            margin-bottom: 5px;
+        }
+        .lesson-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3px;
+            margin-bottom: 2px;
+        }
+        .column-header {
+            background-color: #3498db;
+            color: white;
+            padding: 3px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 2px;
+        }
+        .lesson-section {
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+        }
+        .section-title {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+        textarea {
+            width: 100%;
+            height: 60px;
+            border: none;
+            padding: 3px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-size: 12px;
+        }
+        input {
+            width: 100%;
+            padding: 3px;
+            margin: 1px 0;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+        .time-box {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            margin-bottom: 2px;
+        }
+        .time-box input {
+            width: 55px;
+        }
+        .timer-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 5px;
+        }
+        .time-box span {
+            min-width: 50px;
+            display: inline-block;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 12px;
+            margin-right: 3px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 5px;
+        }
+        #learning-objectives, #learning-outcomes, #plenary, #resources {
+            height: 50px;
+        }
+        @media print {
+            .btn, .button-group {
+                display: none;
+            }
+            .time-box, input, textarea {
+                border-color: #aaa;
+            }
+            @page {
+                margin: 0.3cm;
+                size: A4;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 10px;
+            }
+            textarea {
+                height: 50px;
+                font-size: 10px;
+            }
+            #learning-objectives, #learning-outcomes, #plenary, #resources {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Basic lesson info -->
+    <div class="header">
+        <input type="text" id="class-subject" placeholder="Class/Subject">
+        <input type="text" id="topic-unit" placeholder="Topic/Unit">
+        <input type="date" id="lesson-date">
+    </div>
+    
+    <!-- Learning goals split into two sections -->
+    <div class="lesson-section">
+        <div class="section-title">Learning Objectives</div>
+        <textarea id="learning-objectives" placeholder="What students will learn in this lesson"></textarea>
+    </div>
+    
+    <div class="lesson-section">
+        <div class="section-title">Learning Outcomes</div>
+        <textarea id="learning-outcomes" placeholder="What students will have done by the end of this lesson"></textarea>
+    </div>
+
+    <!-- Column headers -->
+    <div class="lesson-flow">
+        <div class="column-header">Teacher Do</div>
+        <div class="column-header">Student Do</div>
+        <div class="column-header">Check Understanding</div>
+    </div>
+    
+    <div class="lesson-section">
+        <div class="section-title">
+            <div class="time-box">
+                Do now: <input type="number" id="phase1-duration" min="1" max="120" placeholder="mins"> <button class="timer-btn" id="phase1-timer">⏱️</button> <span id="phase1-countdown"></span>
+            </div>
+        </div>
+        <div class="lesson-flow">
+            <textarea id="phase1-teacher" placeholder="What the teacher will do/say"></textarea>
+            <textarea id="phase1-student" placeholder="What students will do"></textarea>
+            <textarea id="phase1-check" placeholder="How will you check understanding?"></textarea>
+        </div>
+    </div>
+    <div class="lesson-section">
+        <div class="section-title">
+            <div class="time-box">
+                I do: <input type="number" id="phase2-duration" min="1" max="120" placeholder="mins"> <button class="timer-btn" id="phase2-timer">⏱️</button> <span id="phase2-countdown"></span>
+            </div>
+        </div>
+        <div class="lesson-flow">
+            <textarea id="phase2-teacher" placeholder="What the teacher will do/say"></textarea>
+            <textarea id="phase2-student" placeholder="What students will do"></textarea>
+            <textarea id="phase2-check" placeholder="How will you check understanding?"></textarea>
+        </div>
+    </div>
+    <div class="lesson-section">
+        <div class="section-title">
+            <div class="time-box">
+                We do: <input type="number" id="phase3-duration" min="1" max="120" placeholder="mins"> <button class="timer-btn" id="phase3-timer">⏱️</button> <span id="phase3-countdown"></span>
+            </div>
+        </div>
+        <div class="lesson-flow">
+            <textarea id="phase3-teacher" placeholder="What the teacher will do/say"></textarea>
+            <textarea id="phase3-student" placeholder="What students will do"></textarea>
+            <textarea id="phase3-check" placeholder="How will you check understanding?"></textarea>
+        </div>
+    </div>
+    <div class="lesson-section">
+        <div class="section-title">
+            <div class="time-box">
+                You do: <input type="number" id="phase4-duration" min="1" max="120" placeholder="mins"> <button class="timer-btn" id="phase4-timer">⏱️</button> <span id="phase4-countdown"></span>
+            </div>
+        </div>
+        <div class="lesson-flow">
+            <textarea id="phase4-teacher" placeholder="What the teacher will do/say"></textarea>
+            <textarea id="phase4-student" placeholder="What students will do"></textarea>
+            <textarea id="phase4-check" placeholder="How will you check understanding?"></textarea>
+        </div>
+    </div>
+    
+    <!-- Plenary -->
+    <div class="lesson-section">
+        <div class="section-title">Plenary</div>
+        <textarea id="plenary" placeholder="Summary activities, wrap-up, assessment of learning"></textarea>
+    </div>
+    
+    <!-- Resources -->
+    <div class="lesson-section">
+        <div class="section-title">Resources & Materials</div>
+        <textarea id="resources" placeholder="List all resources needed for this lesson"></textarea>
+    </div>
+    
+    <div class="button-group">
+        <button class="btn" id="save-btn">Save Lesson Plan</button>
+        <button class="btn" id="load-btn">Load Lesson Plan</button>
+        <button class="btn" onclick="window.print()">Print Lesson Plan</button>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('lesson-date').valueAsDate = new Date();
+        
+        // Timer functionality
+        function startTimer(phaseNum) {
+            const durationInput = document.getElementById(`phase${phaseNum}-duration`);
+            const countdownElement = document.getElementById(`phase${phaseNum}-countdown`);
+            const timerButton = document.getElementById(`phase${phaseNum}-timer`);
+            
+            if (!durationInput.value || isNaN(durationInput.value) || durationInput.value <= 0) {
+                alert('Please enter a valid duration in minutes');
+                return;
+            }
+            
+            // Disable input while timer is running
+            durationInput.disabled = true;
+            timerButton.disabled = true;
+            
+            const duration = parseInt(durationInput.value);
+            let totalSeconds = duration * 60;
+            
+            // Clear any existing timer
+            if (window[`timer${phaseNum}`]) {
+                clearInterval(window[`timer${phaseNum}`]);
+            }
+            
+            function updateCountdown() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                
+                countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (totalSeconds <= 0) {
+                    clearInterval(window[`timer${phaseNum}`]);
+                    countdownElement.textContent = 'Time!';
+                    
+                    // Re-enable input when timer completes
+                    durationInput.disabled = false;
+                    timerButton.disabled = false;
+                    
+                    // Play bell sound instead of alert
+                    playBellSound();
+                }
+                
+                totalSeconds--;
+            }
+            
+            // Initial display
+            updateCountdown();
+            
+            // Start interval
+            window[`timer${phaseNum}`] = setInterval(updateCountdown, 1000);
+        }
+        
+        // Bell sound function using Web Audio API
+        function playBellSound() {
+            // Create audio context
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioContext();
+            
+            // Create oscillator for bell sound
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            // Connect nodes
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            // Set properties for bell-like sound
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 830; // Higher frequency for bell sound
+            gainNode.gain.value = 0.5;
+            
+            // Envelope for bell sound
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+            
+            // Start and stop
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 1.5);
+            
+            // Create second tone for more bell-like sound
+            setTimeout(() => {
+                const oscillator2 = audioCtx.createOscillator();
+                const gainNode2 = audioCtx.createGain();
+                
+                oscillator2.connect(gainNode2);
+                gainNode2.connect(audioCtx.destination);
+                
+                oscillator2.type = 'sine';
+                oscillator2.frequency.value = 550; // Lower frequency component
+                
+                gainNode2.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode2.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.01);
+                gainNode2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+                
+                oscillator2.start();
+                oscillator2.stop(audioCtx.currentTime + 1.2);
+            }, 100);
+        }
+        
+        // Add event listeners for timer buttons
+        document.getElementById('phase1-timer').addEventListener('click', () => startTimer(1));
+        document.getElementById('phase2-timer').addEventListener('click', () => startTimer(2));
+        document.getElementById('phase3-timer').addEventListener('click', () => startTimer(3));
+        document.getElementById('phase4-timer').addEventListener('click', () => startTimer(4));
+        
+        // Save functionality
+        document.getElementById('save-btn').addEventListener('click', function() {
+            // Collect all form data
+            const lessonData = {
+                classSubject: document.getElementById('class-subject').value,
+                topicUnit: document.getElementById('topic-unit').value,
+                lessonDate: document.getElementById('lesson-date').value,
+                learningObjectives: document.getElementById('learning-objectives').value,
+                learningOutcomes: document.getElementById('learning-outcomes').value,
+                phase1: {
+                    duration: document.getElementById('phase1-duration').value,
+                    teacher: document.getElementById('phase1-teacher').value,
+                    student: document.getElementById('phase1-student').value,
+                    check: document.getElementById('phase1-check').value
+                },
+                phase2: {
+                    duration: document.getElementById('phase2-duration').value,
+                    teacher: document.getElementById('phase2-teacher').value,
+                    student: document.getElementById('phase2-student').value,
+                    check: document.getElementById('phase2-check').value
+                },
+                phase3: {
+                    duration: document.getElementById('phase3-duration').value,
+                    teacher: document.getElementById('phase3-teacher').value,
+                    student: document.getElementById('phase3-student').value,
+                    check: document.getElementById('phase3-check').value
+                },
+                phase4: {
+                    duration: document.getElementById('phase4-duration').value,
+                    teacher: document.getElementById('phase4-teacher').value,
+                    student: document.getElementById('phase4-student').value,
+                    check: document.getElementById('phase4-check').value
+                },
+                plenary: document.getElementById('plenary').value,
+                resources: document.getElementById('resources').value
+            };
+            
+            // Convert to JSON string
+            const lessonJSON = JSON.stringify(lessonData);
+            
+            // Create default filename based on subject and date
+            let filename = 'Lesson_Plan';
+            if (lessonData.classSubject) {
+                filename = lessonData.classSubject.replace(/\s+/g, '_');
+            }
+            if (lessonData.lessonDate) {
+                filename += '_' + lessonData.lessonDate;
+            }
+            filename += '.json';
+            
+            // Create a download link
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(lessonJSON);
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", filename);
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
+        
+        // Load functionality
+        document.getElementById('load-btn').addEventListener('click', function() {
+            // Create file input element
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.json';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
+            
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const lessonData = JSON.parse(e.target.result);
+                        
+                        // Fill in form fields with loaded data
+                        document.getElementById('class-subject').value = lessonData.classSubject || '';
+                        document.getElementById('topic-unit').value = lessonData.topicUnit || '';
+                        document.getElementById('lesson-date').value = lessonData.lessonDate || '';
+                        document.getElementById('learning-objectives').value = lessonData.learningObjectives || '';
+                        document.getElementById('learning-outcomes').value = lessonData.learningOutcomes || '';
+                        
+                        // Phase 1
+                        if (lessonData.phase1) {
+                            document.getElementById('phase1-duration').value = lessonData.phase1.duration || '';
+                            document.getElementById('phase1-teacher').value = lessonData.phase1.teacher || '';
+                            document.getElementById('phase1-student').value = lessonData.phase1.student || '';
+                            document.getElementById('phase1-check').value = lessonData.phase1.check || '';
+                        }
+                        
+                        // Phase 2
+                        if (lessonData.phase2) {
+                            document.getElementById('phase2-duration').value = lessonData.phase2.duration || '';
+                            document.getElementById('phase2-teacher').value = lessonData.phase2.teacher || '';
+                            document.getElementById('phase2-student').value = lessonData.phase2.student || '';
+                            document.getElementById('phase2-check').value = lessonData.phase2.check || '';
+                        }
+                        
+                        // Phase 3
+                        if (lessonData.phase3) {
+                            document.getElementById('phase3-duration').value = lessonData.phase3.duration || '';
+                            document.getElementById('phase3-teacher').value = lessonData.phase3.teacher || '';
+                            document.getElementById('phase3-student').value = lessonData.phase3.student || '';
+                            document.getElementById('phase3-check').value = lessonData.phase3.check || '';
+                        }
+                        
+                        // Phase 4
+                        if (lessonData.phase4) {
+                            document.getElementById('phase4-duration').value = lessonData.phase4.duration || '';
+                            document.getElementById('phase4-teacher').value = lessonData.phase4.teacher || '';
+                            document.getElementById('phase4-student').value = lessonData.phase4.student || '';
+                            document.getElementById('phase4-check').value = lessonData.phase4.check || '';
+                        }
+                        
+                        document.getElementById('plenary').value = lessonData.plenary || '';
+                        document.getElementById('resources').value = lessonData.resources || '';
+                        
+                    } catch (error) {
+                        alert('Error loading lesson plan: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+                fileInput.remove();
+            });
+            
+            fileInput.click();
+        });
+    </script>
+</body>
+</html>
