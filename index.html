@@ -229,7 +229,7 @@
     <div class="button-group">
         <button class="btn" id="save-btn">Save Lesson Plan</button>
         <button class="btn" id="load-btn">Load Lesson Plan</button>
-        <button class="btn" onclick="window.print()">Print Lesson Plan</button>
+        <button class="btn" id="print-btn">Print Lesson Plan</button>
     </div>
 
     <script>
@@ -342,6 +342,35 @@
         document.getElementById('phase4-timer').addEventListener('click', () => startTimer(4));
         document.getElementById('phase5-timer').addEventListener('click', () => startTimer(5)); // Event listener for plenary timer
         
+        // Print functionality with custom filename
+        document.getElementById('print-btn').addEventListener('click', function() {
+            // Get values for filename
+            const classSubject = document.getElementById('class-subject').value || 'Lesson_Plan';
+            const topicUnit = document.getElementById('topic-unit').value || '';
+            const lessonDate = document.getElementById('lesson-date').value || '';
+            
+            // Create filename for print dialog with date first
+            let printTitle = lessonDate || 'Lesson_Plan';
+            
+            // Add class/subject
+            if (classSubject && printTitle !== 'Lesson_Plan') {
+                printTitle += '_' + classSubject.replace(/\s+/g, '_');
+            } else if (classSubject) {
+                printTitle = classSubject.replace(/\s+/g, '_');
+            }
+            
+            // Add topic/unit
+            if (topicUnit) {
+                printTitle += '_' + topicUnit.replace(/\s+/g, '_');
+            }
+            
+            // Set the document title which will be used as default filename in print dialog
+            document.title = printTitle;
+            
+            // Trigger print
+            window.print();
+        });
+        
         // Save functionality
         document.getElementById('save-btn').addEventListener('click', function() {
             // Collect all form data
@@ -387,14 +416,24 @@
             // Convert to JSON string
             const lessonJSON = JSON.stringify(lessonData);
             
-            // Create default filename based on subject and date
+            // Create default filename based on date, subject, and topic/unit
             let filename = 'Lesson_Plan';
-            if (lessonData.classSubject) {
-                filename = lessonData.classSubject.replace(/\s+/g, '_');
-            }
+            
+            // Add date to filename if available (FIRST)
             if (lessonData.lessonDate) {
-                filename += '_' + lessonData.lessonDate;
+                filename = lessonData.lessonDate;
             }
+            
+            // Add class/subject to filename if available
+            if (lessonData.classSubject) {
+                filename += '_' + lessonData.classSubject.replace(/\s+/g, '_');
+            }
+            
+            // Add topic/unit to filename if available
+            if (lessonData.topicUnit) {
+                filename += '_' + lessonData.topicUnit.replace(/\s+/g, '_');
+            }
+            
             filename += '.json';
             
             // Create a download link
