@@ -206,9 +206,13 @@
         </div>
     </div>
     
-    <!-- Plenary -->
+    <!-- Plenary with added timer -->
     <div class="lesson-section">
-        <div class="section-title">Plenary</div>
+        <div class="section-title">
+            <div class="time-box">
+                Plenary: <input type="number" id="phase5-duration" min="1" max="120" placeholder="mins"> <button class="timer-btn" id="phase5-timer">⏱️</button> <span id="phase5-countdown"></span>
+            </div>
+        </div>
         <textarea id="plenary" placeholder="Summary activities, wrap-up, assessment of learning"></textarea>
     </div>
     
@@ -332,6 +336,7 @@
         document.getElementById('phase2-timer').addEventListener('click', () => startTimer(2));
         document.getElementById('phase3-timer').addEventListener('click', () => startTimer(3));
         document.getElementById('phase4-timer').addEventListener('click', () => startTimer(4));
+        document.getElementById('phase5-timer').addEventListener('click', () => startTimer(5)); // Add event listener for plenary timer
         
         // Save functionality
         document.getElementById('save-btn').addEventListener('click', function() {
@@ -365,6 +370,9 @@
                     teacher: document.getElementById('phase4-teacher').value,
                     student: document.getElementById('phase4-student').value,
                     check: document.getElementById('phase4-check').value
+                },
+                phase5: {
+                    duration: document.getElementById('phase5-duration').value
                 },
                 plenary: document.getElementById('plenary').value,
                 resources: document.getElementById('resources').value
@@ -448,6 +456,11 @@
                             document.getElementById('phase4-teacher').value = lessonData.phase4.teacher || '';
                             document.getElementById('phase4-student').value = lessonData.phase4.student || '';
                             document.getElementById('phase4-check').value = lessonData.phase4.check || '';
+                        }
+                        
+                        // Phase 5 (Plenary)
+                        if (lessonData.phase5) {
+                            document.getElementById('phase5-duration').value = lessonData.phase5.duration || '';
                         }
                         
                         document.getElementById('plenary').value = lessonData.plenary || '';
