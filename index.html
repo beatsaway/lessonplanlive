@@ -102,7 +102,7 @@
             justify-content: flex-start;
             margin-top: 5px;
         }
-        #learning-objectives, #learning-outcomes, #plenary, #resources {
+        #learning-objectives, #learning-outcomes, #resources {
             height: 50px;
         }
         @media print {
@@ -125,7 +125,7 @@
                 height: 50px;
                 font-size: 10px;
             }
-            #learning-objectives, #learning-outcomes, #plenary, #resources {
+            #learning-objectives, #learning-outcomes, #resources {
                 height: 40px;
             }
         }
@@ -206,14 +206,18 @@
         </div>
     </div>
     
-    <!-- Plenary with added timer -->
+    <!-- Plenary with 3-column structure like the other sections -->
     <div class="lesson-section">
         <div class="section-title">
             <div class="time-box">
                 Plenary: <input type="number" id="phase5-duration" min="1" max="120" placeholder="mins"> <button class="timer-btn" id="phase5-timer">⏱️</button> <span id="phase5-countdown"></span>
             </div>
         </div>
-        <textarea id="plenary" placeholder="Summary activities, wrap-up, assessment of learning"></textarea>
+        <div class="lesson-flow">
+            <textarea id="phase5-teacher" placeholder="What the teacher will do/say"></textarea>
+            <textarea id="phase5-student" placeholder="What students will do"></textarea>
+            <textarea id="phase5-check" placeholder="How will you check understanding?"></textarea>
+        </div>
     </div>
     
     <!-- Resources -->
@@ -336,7 +340,7 @@
         document.getElementById('phase2-timer').addEventListener('click', () => startTimer(2));
         document.getElementById('phase3-timer').addEventListener('click', () => startTimer(3));
         document.getElementById('phase4-timer').addEventListener('click', () => startTimer(4));
-        document.getElementById('phase5-timer').addEventListener('click', () => startTimer(5)); // Add event listener for plenary timer
+        document.getElementById('phase5-timer').addEventListener('click', () => startTimer(5)); // Event listener for plenary timer
         
         // Save functionality
         document.getElementById('save-btn').addEventListener('click', function() {
@@ -372,9 +376,11 @@
                     check: document.getElementById('phase4-check').value
                 },
                 phase5: {
-                    duration: document.getElementById('phase5-duration').value
+                    duration: document.getElementById('phase5-duration').value,
+                    teacher: document.getElementById('phase5-teacher').value,
+                    student: document.getElementById('phase5-student').value,
+                    check: document.getElementById('phase5-check').value
                 },
-                plenary: document.getElementById('plenary').value,
                 resources: document.getElementById('resources').value
             };
             
@@ -461,10 +467,17 @@
                         // Phase 5 (Plenary)
                         if (lessonData.phase5) {
                             document.getElementById('phase5-duration').value = lessonData.phase5.duration || '';
+                            document.getElementById('phase5-teacher').value = lessonData.phase5.teacher || '';
+                            document.getElementById('phase5-student').value = lessonData.phase5.student || '';
+                            document.getElementById('phase5-check').value = lessonData.phase5.check || '';
                         }
                         
-                        document.getElementById('plenary').value = lessonData.plenary || '';
                         document.getElementById('resources').value = lessonData.resources || '';
+                        
+                        // Handle backward compatibility with old format that used a single plenary textarea
+                        if (lessonData.plenary && !lessonData.phase5?.teacher) {
+                            document.getElementById('phase5-teacher').value = lessonData.plenary || '';
+                        }
                         
                     } catch (error) {
                         alert('Error loading lesson plan: ' + error.message);
